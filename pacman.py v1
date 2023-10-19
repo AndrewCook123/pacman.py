@@ -885,9 +885,9 @@ while run:
     clyde = Ghost(Level.clyde_x, Level.clyde_y, Level.targets[3], Level.ghost_speeds[3], Level.clyde_img, Level.clyde_direction, Level.clyde_dead,
                   Level.clyde_box, 3)
     draw_misc()
-    targets = get_targets(Level.blinky_x, Level.blinky_y, Level.inky_x, Level.inky_y, Level.inky_x, Level.pinky_y, Level.clyde_x, Level.clyde_y)
+    Level.targets = get_targets(Level.blinky_x, Level.blinky_y, Level.inky_x, Level.inky_y, Level.inky_x, Level.pinky_y, Level.clyde_x, Level.clyde_y)
 
-    turns_allowed = check_position(center_x, center_y)
+    Level.turns_allowed = check_position(center_x, center_y)
     if Level.moving:
         Level.player_x, Level.player_y = move_player(Level.player_x, Level.player_y)
         if not Level.blinky_dead and not blinky.in_box:
