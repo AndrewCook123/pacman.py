@@ -1,6 +1,7 @@
 import pygame
 class pause(object):
-    def __init__(self,screen):
+    def __init__(self,screen,status):
+        self.status=False
         self.screen=screen
     def shower(self):
         pause_text = self.font.render('II', True, 'white')
@@ -8,3 +9,6 @@ class pause(object):
     def PauseMenu(self):
         pygame.draw.rect(self.screen, 'red', [50, 200, 800, 300],0, 10)
         pygame.draw.rect(self.screen, 'blue', [70, 220, 760, 260], 0, 10)
+        return self.status
+    def setStatus(self, status):
+        self.status = status
