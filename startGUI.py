@@ -4,12 +4,14 @@ import LoadGUI
 
 
 class StartGUI(object):
-    def __init__(self, screen,font):
+    def __init__(self, screen,font,status):
         self.clicked_start=False
         self.clicked_load=False
         self.screen=screen
         self.font=font
         self.timer=0
+        self.status=False
+        self.new=LoadGUI.loadGUI(self.screen,self.font)
         
         
         
@@ -24,11 +26,11 @@ class StartGUI(object):
         start_text = self.font.render(f'Load->', True, 'white')
         self.screen.blit(start_text, (430, 420))
         self.check=False
-        self.new=LoadGUI.loadGUI(self.screen,self.font)
         
         if start.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
                 self.clicked_start = True
+                self.status=True
         if pygame.mouse.get_pressed()[0] == 0:
             pass
         if load.collidepoint(pos):
@@ -42,13 +44,22 @@ class StartGUI(object):
                     if not self.new.load():
                         self.new.load()
                 else:
-                     self.check=True
+                    self.check=True
+            
+            
+                
+        if self.clicked_load:
+            self.clicked_start=False
+            
+        
+        if pygame.mouse.get_pressed()[0] == 0:
+            pass
+        
+        return self.status
+    def setStatus(self, status):
+        self.status = status
             
             
                 
         
         
-        if pygame.mouse.get_pressed()[0] == 0:
-            pass
-        
-        return self.clicked_start
