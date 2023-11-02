@@ -5,12 +5,13 @@ from pauseGUI import pause
 
 class loadGUI(object):
     def __init__(self, screen,font):
-        self.clicked_back=False
-        self.clicked_load=False
         self.screen=screen
         self.font=font
         self.check=False
         self.timer=0
+        self.clicked_back=False
+        self.clicked_load=False
+        
         
         
         
@@ -26,13 +27,16 @@ class loadGUI(object):
         load_text = self.font.render(f'Load->', True, 'white')
         self.screen.blit(load_text, (430, 420))
         self.check=False
-        self.new=startGUI.StartGUI(self.screen, self.font)
+        
+        
+        
         
        
         
         if back.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
                 self.clicked_back = True
+                self.new=startGUI.StartGUI(self.screen, self.font,False)
         if load.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
                 self.clicked_load=True
@@ -41,18 +45,23 @@ class loadGUI(object):
                 self.timer+=1
             else:
                 if not self.check:
-                    if not self.new.load():
-                        self.new.load()
+                    if not self.new.start():
+                        self.new.start()
+                        
                 else:
                     self.check=True
-            print(self.timer)
+                    self.new.setStatus(False)
+                    
+        print(self.clicked_back)
         if self.clicked_load:
-            new1=pause(self.screen)
-            new1.PauseMenu()
+            pass
         
         
         
         if pygame.mouse.get_pressed()[0] == 0:
             pass
         
+        
         return self.clicked_back
+    def setStatus(self, status):
+        self.status = status
