@@ -20,12 +20,11 @@ class loadGUI(object):
         pos = pygame.mouse.get_pos()
         pygame.draw.rect(self.screen, 'white', [50, 200, 800, 300],0, 10)
         pygame.draw.rect(self.screen, 'dark gray', [70, 220, 760, 260], 0, 10)
-        back=pygame.draw.rect(self.screen, 'Blue', [200, 300, 150, 50], 0, 10)
-        start_text = self.font.render(f'BACK<-', True, 'white')
-        self.screen.blit(start_text, (230, 320))
-        load=pygame.draw.rect(self.screen, 'Blue', [400, 400, 150, 50], 0, 10)
-        load_text = self.font.render(f'Load->', True, 'white')
-        self.screen.blit(load_text, (430, 420))
+        back=pygame.draw.rect(self.screen, 'Blue', [100, 250, 150, 50], 0, 10)
+        back_text = self.font.render(f'BACK<-', True, 'white')
+        self.screen.blit(back_text, (130, 270))
+        LoadMenu_text = self.Mainfont.render(f'Load Menu', True, 'white')
+        self.screen.blit(LoadMenu_text, (350, 250))
         self.check=False
         
         
