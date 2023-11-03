@@ -12,6 +12,7 @@ class StartGUI(object):
         self.timer=0
         self.status=False
         self.new=LoadGUI.loadGUI(self.screen,self.font)
+        self.Mainfont=pygame.font.Font('freesansbold.ttf', 40)
         
         
         
@@ -19,12 +20,14 @@ class StartGUI(object):
         pos = pygame.mouse.get_pos()
         pygame.draw.rect(self.screen, 'white', [50, 200, 800, 300],0, 10)
         pygame.draw.rect(self.screen, 'dark gray', [70, 220, 760, 260], 0, 10)
-        start=pygame.draw.rect(self.screen, 'Blue', [200, 400, 150, 50], 0, 10)
+        start=pygame.draw.rect(self.screen, 'Blue', [275, 400, 150, 50], 0, 10)
         start_text = self.font.render(f'START->', True, 'white')
-        self.screen.blit(start_text, (230, 420))
-        load=pygame.draw.rect(self.screen, 'Blue', [400, 400, 150, 50], 0, 10)
+        self.screen.blit(start_text, (305, 420))
+        load=pygame.draw.rect(self.screen, 'Blue', [475, 400, 150, 50], 0, 10)
         start_text = self.font.render(f'Load->', True, 'white')
-        self.screen.blit(start_text, (430, 420))
+        self.screen.blit(start_text, (515, 420))
+        MainMenu_text = self.Mainfont.render(f'Pac-Man', True, 'white')
+        self.screen.blit(MainMenu_text, (350, 300))
         self.check=False
         
         if start.collidepoint(pos):
@@ -48,8 +51,10 @@ class StartGUI(object):
             
             
                 
-        if self.clicked_load:
-            self.clicked_start=False
+       
+        
+            
+        
             
         
         if pygame.mouse.get_pressed()[0] == 0:
@@ -58,8 +63,8 @@ class StartGUI(object):
         return self.status
     def setStatus(self, status):
         self.status = status
-            
-            
+    def setLoad(self, clickedLoad):
+        self.clicked_load = clickedLoad
                 
         
         
