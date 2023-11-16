@@ -1,4 +1,4 @@
-from board import boards
+from testing_board import boards
 from Ghost import Ghost
 from player import Player
 from victoryGUI import VictoryGUI
@@ -8,7 +8,7 @@ from pauseGUI import pause
 import pygame
 import copy
 import math
-
+from datetime import date
 class Level(object):
     def __init__(self):
         self.WIDTH = 900
@@ -18,9 +18,12 @@ class Level(object):
         self.fps = 60
         self.font = pygame.font.Font('freesansbold.ttf', 20)
         self.level = copy.deepcopy(boards)
+        self.level_num=1
         self.color = 'blue'
         self.PI = math.pi
         self.player_images = []
+        self.today = date.today()
+        self.date = self.today.strftime("%m/%d/%y")
         for i in range(1, 5):
             self.player_images.append(pygame.transform.scale(pygame.image.load(f'assets/player_images/{i}.png'), (45, 45)))
         self.blinky_img = pygame.transform.scale(pygame.image.load(f'assets/ghost_images/red.png'), (45, 45))
@@ -70,16 +73,16 @@ class Level(object):
         self.game_over = False
         self.game_won = False
         self.quitter=False
-        self.time=3600
-        self.won=VictoryGUI(self.screen, self.font)
+        self.time=7200
         self.over=gameOver(self.screen, self.font,False)
+        self.won=VictoryGUI(self.screen, self.font,self.level_num,self.lives,self.date,self.score)
         self.happy=StartGUI(self.screen, self.font,False)
         self.pauseMenu=pause(self.screen,self.font, False)
         self.check=False
-        
+       
     def draw_misc(self, game_won, game_over, lives):
         score_text = self.font.render(f'Score: {self.score}', True, 'white')
-        self.screen.blit(score_text, (700, 25))
+        self.screen.blit(score_text, (700, 75))
         lives_text = self.font.render(f'Lives: {self.lives}', True, 'white')
         self.screen.blit(lives_text, (700, 50))
         if self.powerup:
@@ -89,9 +92,13 @@ class Level(object):
         if game_over:
             self.over.Gover()
         if game_won:
+            self.won.setlevel(self.level_num)
+            self.won.setlives(self.lives)
+            self.won.setscore(self.score)
+
             self.won.victory()
-        
-        
+       
+       
     def check_collisions(self, scor, power, power_count, eaten_ghosts, center_x, center_y, player_x, level):
         num1 = (self.HEIGHT - 50) // 32
         num2 = self.WIDTH // 30
@@ -106,7 +113,7 @@ class Level(object):
                 power_count = 0
                 eaten_ghosts = [False, False, False, False]
         return scor, power, power_count, eaten_ghosts
-        
+       
     def draw_board(self, level):
         num1 = ((self.HEIGHT - 50) // 32)
         num2 = (self.WIDTH // 30)
@@ -138,11 +145,11 @@ class Level(object):
                 if level[i][j] == 9:
                     pygame.draw.line(self.screen, 'white', (j * num2, i * num1 + (0.5 * num1)),
                                          (j * num2 + num2, i * num1 + (0.5 * num1)), 3)
-                        
-    
-        
-    
-        
+                       
+   
+       
+   
+       
     def get_targets(self, blink_x, blink_y, ink_x, ink_y, pink_x, pink_y, clyd_x, clyd_y, blinky, pinky, inky, clyde, player_x, player_y, powerup):
         if player_x < 450:
             runaway_x = 900
@@ -220,7 +227,7 @@ class Level(object):
             else:
                 clyd_target = return_target
         return [blink_target, ink_target, pink_target, clyd_target]
-    
+   
     def reset_positions(self, player_circle, blinky, inky, pinky, clyde):
         if not self.powerup:
             if (player_circle.colliderect(blinky.rect) and not blinky.dead) or \
@@ -441,7 +448,7 @@ class Level(object):
               self.pinky_dead = False
               self.score = 0
               self.lives = 3
-              self.time=3600
+              self.time=7200
               self.level = copy.deepcopy(boards)
               self.game_over = False
               self.game_won = False
@@ -465,11 +472,11 @@ class Level(object):
             self.clyde_dead = True
             self.eaten_ghost[3] = True
             self.score += (2 ** self.eaten_ghost.count(True)) * 100
-        
-        
-    
+       
+       
+   
     def gameLoop(self):
-        
+       
         player = Player()
         run = True
         while run:
@@ -500,8 +507,8 @@ class Level(object):
             if self.powerup:
                 self.ghost_speeds = [1, 1, 1, 1]
             else:
-                self.ghost_speeds = [0,0,0,0]
-                self.player_speed=0
+                self.ghost_speeds = [2,2,2,2]
+                self.player_speed=2
             if self.eaten_ghost[0]:
                 self.ghost_speeds[0] = 2
             if self.eaten_ghost[1]:
@@ -518,6 +525,7 @@ class Level(object):
                 self.ghost_speeds[2] = 4
             if self.clyde_dead:
                 self.ghost_speeds[3] = 4
+            
 
             self.game_won = True
             for i in range(len(self.level)):
@@ -525,7 +533,8 @@ class Level(object):
                     self.game_won = False
             if self.time<=0:
                 self.game_over=True
-        
+            
+       
 
             player_circle = pygame.draw.circle(self.screen, 'black', (self.center_x, self.center_y), 20, 2)
             player.draw_player(self.direction, self.player_x, self.player_y, self.counter, self.screen, self.player_images)
@@ -538,7 +547,7 @@ class Level(object):
             clyde = Ghost(self.clyde_x, self.clyde_y, self.targets[3], self.ghost_speeds[3], self.clyde_img, self.clyde_direction, self.clyde_dead,
                           self.clyde_box, self.powerup, 3)
             self.draw_misc(self.game_won, self.game_over, self.lives)
-            self.targets = self.get_targets(self.blinky_x, self.blinky_y, self.inky_x, self.inky_y, self.pinky_x, self.pinky_y, self.clyde_x, 
+            self.targets = self.get_targets(self.blinky_x, self.blinky_y, self.inky_x, self.inky_y, self.pinky_x, self.pinky_y, self.clyde_x,
                                         self.clyde_y, blinky, pinky, inky, clyde, self.player_x, self.player_y, self.powerup)
             self.moving=True
             if not self.check:
@@ -547,21 +556,25 @@ class Level(object):
                     self.moving=False
                 else:
                     self.check=True
+                    self.quitter=False
+            if self.game_won:
+                self.moving=False
            
-                
+               
 
             self.turns_allowed = player.check_position(self.center_x, self.center_y, self.direction, self.level)
-            
+           
             time_text = self.font.render(f'Time: {self.time//60}', True, 'white')
-            self.screen.blit(time_text, (350, 25))
+            self.screen.blit(time_text, (350, 45))
             if self.pauseMenu.show():
                 self.pauseMenu.PauseMenu()
                 if self.pauseMenu.quit_button():
                     self.quitter=True
+                    self.happy.clicked_start=False
                 self.moving=False
                 if self.pauseMenu.PauseMenu():
                     self.moving=True
-                
+               
             if self.moving:
                 if self.time>0:
                     self.time-=1
@@ -582,7 +595,7 @@ class Level(object):
             self.score, self.powerup, self.power_counter, self.eaten_ghost = self.check_collisions(self.score, self.powerup, self.power_counter, self.eaten_ghost, self.center_x, self.center_y, self.player_x, self.level)
             # add to if not powerup to check if eaten ghosts
             self.reset_positions(player_circle, blinky, inky, pinky, clyde)
-            
+           
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -596,8 +609,8 @@ class Level(object):
                         self.direction_command = 2
                     if event.key == pygame.K_DOWN:
                         self.direction_command = 3
-                    
-                    
+                   
+                   
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_RIGHT and self.direction_command == 0:
@@ -631,6 +644,7 @@ class Level(object):
                 self.pinky_dead = False
             if clyde.in_box and self.clyde_dead:
                 self.clyde_dead = False
+            
            
            
 
