@@ -21,6 +21,7 @@ class loadGUI(object):
         
     def load(self):
         index=0
+        lyst = []
         self.connection.execute(''' CREATE TABLE IF NOT EXISTS PACMANGAMES
                           (SAVENAME TEXT PRIMARY KEY NOT NULL,
                         LEVEL INT NOT NULL,
@@ -33,17 +34,17 @@ class loadGUI(object):
         font=pygame.font.Font('freesansbold.ttf', 13)
         selector2=self.connection.execute("SELECT SAVENAME,LEVEL, LIVES, DATESAVE, SCORE from PACMANGAMES")
         for row in selector2:
+            lyst.append(row)
             index += 1
-        new=selector2.fetchall()
-        if new !=[]:
-            if index==1:
-                self.new1=new[0]
+        if lyst !=[]:
+            if index>=1:
+                self.new1=lyst[0]
                 s+= "save name: "+str(self.new1[0])+"  "+"level: "+str(self.new1[1])+"   "+"lives: "+str(self.new1[2])+"   "+"date of save: "+str(self.new1[3])+"   "+"score: "+str(self.new1[4])
-            if index==2:
-                self.new2=new[1]
+            if index>=2:
+                self.new2=lyst[1]
                 s1+= "save name: "+str(self.new2[0])+"  "+"level: "+str(self.new2[1])+"   "+"lives: "+str(self.new2[2])+"   "+"date of save: "+str(self.new2[3])+"   "+"score: "+str(self.new2[4])
             if index==3:
-                self.new3=new[2]
+                self.new3=lyst[2]
                 s2+= "save name: "+str(self.new3[0])+"  "+"level: "+str(self.new3[1])+"   "+"lives: "+str(self.new3[2])+"   "+"date of save: "+str(self.new3[3])+"   "+"score: "+str(self.new3[4])
         pos = pygame.mouse.get_pos()
         pygame.draw.rect(self.screen, 'white', [50, 200, 800, 300],0, 10)
@@ -66,9 +67,7 @@ class loadGUI(object):
         delete1=pygame.draw.rect(self.screen, 'red', [650, 300, 100, 35], 0, 10)
         delete2=pygame.draw.rect(self.screen, 'red', [650, 350, 100, 35], 0, 10)
         delete3=pygame.draw.rect(self.screen, 'red', [650, 400, 100, 35], 0, 10)
-        print(s)
-        
-        
+
         
         
        
