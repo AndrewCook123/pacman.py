@@ -24,15 +24,16 @@ class saveGUI(object):
                     self.usertext+=event.unicode
                     self.usertext=self.usertext
         user_text = self.font.render(f'save name: {self.usertext}', True, 'white')
+        error_text = self.font.render("Please enter a save name, cannot be left empty",True, 'red')
+        self.screen.blit(error_text, (250, 330))
         self.screen.blit(user_text, (350, 350))
         if top.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                self.clicked = True
-                if self.usertext=='':
-                    self.screen.blit("Please enter a save name", (350, 330))
-                else:
+                if pygame.mouse.get_pressed()[0] == 1 and self.usertext == "":
+                    pass
+                elif pygame.mouse.get_pressed()[0] == 1 and self.usertext != "":
+                    self.clicked = True
                     self.data.databasesetter()
-                print("pressed")
+                    print("pressed")
                 
         return self.clicked
     def setlevel(self,level):
