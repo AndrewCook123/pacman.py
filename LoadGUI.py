@@ -1,6 +1,7 @@
 import pygame
 import startGUI
-from pauseGUI import pause
+import sqlite3
+
 
 
 class loadGUI(object):
@@ -10,22 +11,62 @@ class loadGUI(object):
         self.check=False
         self.timer=0
         self.clicked_back=False
+        self.connection=sqlite3.connect("pacman.db")
         self.clicked_load=False
+        self.Mainfont=pygame.font.Font('freesansbold.ttf', 40)
         
         
         
         
         
     def load(self):
+        index=0
+        self.connection.execute(''' CREATE TABLE IF NOT EXISTS PACMANGAMES
+                          (SAVENAME TEXT PRIMARY KEY NOT NULL,
+                        LEVEL INT NOT NULL,
+                        LIVES INT NOT NULL,
+                        DATESAVE TEXT NOT NULL,
+                        SCORE INT NOT NULL);''')
+        s=''
+        s1=''
+        s2=''
+        font=pygame.font.Font('freesansbold.ttf', 13)
+        selector2=self.connection.execute("SELECT SAVENAME,LEVEL, LIVES, DATESAVE, SCORE from PACMANGAMES")
+        for row in selector2:
+            index += 1
+        new=selector2.fetchall()
+        if new !=[]:
+            if index==1:
+                self.new1=new[0]
+                s+= "save name: "+str(self.new1[0])+"  "+"level: "+str(self.new1[1])+"   "+"lives: "+str(self.new1[2])+"   "+"date of save: "+str(self.new1[3])+"   "+"score: "+str(self.new1[4])
+            if index==2:
+                self.new2=new[1]
+                s1+= "save name: "+str(self.new2[0])+"  "+"level: "+str(self.new2[1])+"   "+"lives: "+str(self.new2[2])+"   "+"date of save: "+str(self.new2[3])+"   "+"score: "+str(self.new2[4])
+            if index==3:
+                self.new3=new[2]
+                s2+= "save name: "+str(self.new3[0])+"  "+"level: "+str(self.new3[1])+"   "+"lives: "+str(self.new3[2])+"   "+"date of save: "+str(self.new3[3])+"   "+"score: "+str(self.new3[4])
         pos = pygame.mouse.get_pos()
         pygame.draw.rect(self.screen, 'white', [50, 200, 800, 300],0, 10)
         pygame.draw.rect(self.screen, 'dark gray', [70, 220, 760, 260], 0, 10)
-        back=pygame.draw.rect(self.screen, 'Blue', [100, 250, 150, 50], 0, 10)
+        back=pygame.draw.rect(self.screen, 'Blue', [100, 225, 150, 50], 0, 10)
+        load1=pygame.draw.rect(self.screen, 'Blue', [150, 300, 600, 35], 0, 10)
+        load2=pygame.draw.rect(self.screen, 'Blue', [150, 350, 600, 35], 0, 10)
+        load3=pygame.draw.rect(self.screen, 'Blue', [150, 400, 600, 35], 0, 10)
         back_text = self.font.render(f'BACK<-', True, 'white')
-        self.screen.blit(back_text, (130, 270))
+        self.screen.blit(back_text, (130, 250))
         LoadMenu_text = self.Mainfont.render(f'Load Menu', True, 'white')
         self.screen.blit(LoadMenu_text, (350, 250))
         self.check=False
+        firstsave_text = font.render(f'{s}', True, 'white')
+        self.screen.blit(firstsave_text, (180, 310))
+        secondsave_text = font.render(f'{s1}', True, 'white')
+        self.screen.blit(secondsave_text, (180, 360))
+        thirdsave_text = font.render(f'{s2}', True, 'white')
+        self.screen.blit(thirdsave_text, (180, 410))
+        delete1=pygame.draw.rect(self.screen, 'red', [650, 300, 100, 35], 0, 10)
+        delete2=pygame.draw.rect(self.screen, 'red', [650, 350, 100, 35], 0, 10)
+        delete3=pygame.draw.rect(self.screen, 'red', [650, 400, 100, 35], 0, 10)
+        print(s)
         
         
         
@@ -36,9 +77,7 @@ class loadGUI(object):
             if pygame.mouse.get_pressed()[0] == 1:
                 self.clicked_back = True
                 self.new=startGUI.StartGUI(self.screen, self.font,False)
-        if load.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                self.clicked_load=True
+        
         if self.clicked_back:
             if self.timer<180:
                 self.timer+=1
@@ -49,11 +88,8 @@ class loadGUI(object):
                         
                 else:
                     self.check=True
-                    self.new.setStatus(False)
                     
-        print(self.clicked_back)
-        if self.clicked_load:
-            pass
+       
         
         
         
