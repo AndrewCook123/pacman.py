@@ -88,7 +88,18 @@ class loadGUI(object):
                 else:
                     self.check=True
                     
-       
+        if delete1.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                firstdelete=self.new1[0]
+                self.connection.execute("DELETE from PACMANGAMES where SAVENAME=(?)",[firstdelete])
+        if delete2.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                seconddelete=self.new2[0]
+                self.connection.execute("DELETE from PACMANGAMES where SAVENAME=(?)",[seconddelete])
+        if delete3.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                thirddelete=self.new3[0]
+                self.connection.execute("DELETE from PACMANGAMES where SAVENAME=(?)",[thirddelete])
         
         
         
