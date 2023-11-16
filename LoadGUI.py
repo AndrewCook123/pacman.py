@@ -14,6 +14,7 @@ class loadGUI(object):
         self.connection=sqlite3.connect("pacman.db")
         self.clicked_load=False
         self.Mainfont=pygame.font.Font('freesansbold.ttf', 40)
+        self.clicked = False
         
         
         
@@ -67,6 +68,31 @@ class loadGUI(object):
         delete1=pygame.draw.rect(self.screen, 'red', [650, 300, 100, 35], 0, 10)
         delete2=pygame.draw.rect(self.screen, 'red', [650, 350, 100, 35], 0, 10)
         delete3=pygame.draw.rect(self.screen, 'red', [650, 400, 100, 35], 0, 10)
+        delete_text = self.font.render("Delete",True, 'white')
+        self.screen.blit(delete_text, (660, 310))
+        self.screen.blit(delete_text, (660, 360))
+        self.screen.blit(delete_text, (660, 410))
+        if delete1.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and len(lyst) >= 1 and self.clicked == False:
+                sql = 'DELETE FROM PACMANGAMES WHERE SAVENAME=?'
+                self.connection.execute(sql, (self.new1[0],))
+                self.connection.commit()
+                self.clicked = True
+        if delete2.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and len(lyst) >= 2 and self.clicked == False:
+                sql = 'DELETE FROM PACMANGAMES WHERE SAVENAME=?'
+                self.connection.execute(sql, (self.new2[0],))
+                self.connection.commit()
+                self.clicked = True
+        if delete3.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and len(lyst) >= 3 and self.clicked == False:
+                sql = 'DELETE FROM PACMANGAMES WHERE SAVENAME=?'
+                self.connection.execute(sql, (self.new3[0],))
+                self.connection.commit()
+                self.clicked = True
+        if self.clicked == True and not pygame.mouse.get_pressed()[0] == 1:
+            self.clicked = False
+
 
         
         
@@ -88,24 +114,12 @@ class loadGUI(object):
                 else:
                     self.check=True
                     
-        if delete1.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                firstdelete=self.new1[0]
-                self.connection.execute("DELETE from PACMANGAMES where SAVENAME=(?)",[firstdelete])
-        if delete2.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                seconddelete=self.new2[0]
-                self.connection.execute("DELETE from PACMANGAMES where SAVENAME=(?)",[seconddelete])
-        if delete3.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                thirddelete=self.new3[0]
-                self.connection.execute("DELETE from PACMANGAMES where SAVENAME=(?)",[thirddelete])
+       
         
         
         
         if pygame.mouse.get_pressed()[0] == 0:
             pass
-        
         
         return self.clicked_back
     def setStatus(self, status):
