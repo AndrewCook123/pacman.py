@@ -2,7 +2,6 @@ import pygame
 import LoadGUI
 
 
-
 class StartGUI(object):
     def __init__(self, screen,font,status):
         self.clicked_start=False
@@ -34,6 +33,8 @@ class StartGUI(object):
             if pygame.mouse.get_pressed()[0] == 1:
                 self.clicked_start = True
                 self.status=True
+        if self.clicked_load:
+            self.status=False
         if pygame.mouse.get_pressed()[0] == 0:
             pass
         if load.collidepoint(pos):
@@ -43,11 +44,15 @@ class StartGUI(object):
             if self.timer<180:
                 self.timer+=1
             else:
+                clicked,level=self.new.load()
                 if not self.check:
-                    if not self.new.load():
+                    if not clicked:
+                        self.clicked_start=False
                         self.new.load()
                 else:
+                    self.clicked_start=self.clicked_start
                     self.check=True
+                    
             
             
                 
@@ -60,11 +65,12 @@ class StartGUI(object):
         if pygame.mouse.get_pressed()[0] == 0:
             pass
         
-        return self.status
+        return self.clicked_start,level
     def setStatus(self, status):
         self.status = status
     def setLoad(self, clickedLoad):
         self.clicked_load = clickedLoad
+    
                 
         
         
