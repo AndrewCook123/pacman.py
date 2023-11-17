@@ -68,10 +68,26 @@ class loadGUI(object):
         delete1=pygame.draw.rect(self.screen, 'red', [650, 300, 100, 35], 0, 10)
         delete2=pygame.draw.rect(self.screen, 'red', [650, 350, 100, 35], 0, 10)
         delete3=pygame.draw.rect(self.screen, 'red', [650, 400, 100, 35], 0, 10)
-        delete_text = self.font.render("Delete",True, 'white')
-        self.screen.blit(delete_text, (660, 310))
-        self.screen.blit(delete_text, (660, 360))
-        self.screen.blit(delete_text, (660, 410))
+
+        
+        
+       
+        
+        if back.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                self.clicked_back = True
+                self.new=startGUI.StartGUI(self.screen, self.font,False)
+        
+        if self.clicked_back:
+            if self.timer<180:
+                self.timer+=1
+            else:
+                if not self.check:
+                    if not self.new.start():
+                        self.new.start()
+                        
+                else:
+                    self.check=True
         if delete1.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and len(lyst) >= 1 and self.clicked == False:
                 sql = 'DELETE FROM PACMANGAMES WHERE SAVENAME=?'
@@ -93,33 +109,18 @@ class loadGUI(object):
         if self.clicked == True and not pygame.mouse.get_pressed()[0] == 1:
             self.clicked = False
 
-
-        
-        
-       
-        
-        if back.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1:
-                self.clicked_back = True
-                self.new=startGUI.StartGUI(self.screen, self.font,False)
-        
-        if self.clicked_back:
-            if self.timer<180:
-                self.timer+=1
-            else:
-                if not self.check:
-                    if not self.new.start():
-                        self.new.start()
-                        
-                else:
-                    self.check=True
-                    
+         
        
         
         
         
         if pygame.mouse.get_pressed()[0] == 0:
             pass
+        
+        
+        return self.clicked_back,self.new1[1]
+    def setStatus(self, status):
+        self.status = status
         
         return self.clicked_back
     def setStatus(self, status):
