@@ -1,14 +1,16 @@
-from testing_board import boards
-from Ghost import Ghost
+from board import overboard
+from ghost import Ghost
 from player import Player
 from victoryGUI import VictoryGUI
-from GameOverGUI import gameOver
+from gameOverGUI import gameOver
 from startGUI import StartGUI
-from pauseGUI import pause
+from pauseGUI import Pause
+import LoadGUI
 import pygame
 import copy
 import math
 from datetime import date
+
 class Level(object):
     def __init__(self):
         self.WIDTH = 900
@@ -17,8 +19,8 @@ class Level(object):
         self.timer = pygame.time.Clock()
         self.fps = 60
         self.font = pygame.font.Font('freesansbold.ttf', 20)
-        self.level = copy.deepcopy(boards)
-        self.level_num=1
+        self.level_num=0
+        self.level = copy.deepcopy(overboard[self.level_num-1])
         self.color = 'blue'
         self.PI = math.pi
         self.player_images = []
@@ -73,12 +75,15 @@ class Level(object):
         self.game_over = False
         self.game_won = False
         self.quitter=False
+        self.resetNewlevel=False
         self.time=7200
         self.over=gameOver(self.screen, self.font,False)
         self.won=VictoryGUI(self.screen, self.font,self.level_num,self.lives,self.date,self.score)
         self.happy=StartGUI(self.screen, self.font,False)
-        self.pauseMenu=pause(self.screen,self.font, False)
+        self.pauseMenu=Pause(self.screen,self.font, False)
+        self.load = LoadGUI.loadGUI(self.screen, self.font)
         self.check=False
+        
        
     def draw_misc(self, game_won, game_over, lives):
         score_text = self.font.render(f'Score: {self.score}', True, 'white')
@@ -96,7 +101,39 @@ class Level(object):
             self.won.setlives(self.lives)
             self.won.setscore(self.score)
 
-            self.won.victory()
+            if self.won.victory():
+                self.level_num+=1
+                self.transLevel()
+                self.level=copy.deepcopy(overboard[self.level_num-1])
+    def transLevel(self):
+        self.powerup = False
+        self.power_counter = 0
+        self.startup_counter = 0
+        self.player_x = 450
+        self.player_y = 663
+        self.direction = 0
+        self.direction_command = 0
+        self.blinky_x = 56
+        self.blinky_y = 58
+        self.blinky_direction = 0
+        self.inky_x = 440
+        self.inky_y = 388
+        self.inky_direction = 2
+        self.pinky_x = 440
+        self.pinky_y = 438
+        self.pinky_direction = 2
+        self.clyde_x = 440
+        self.clyde_y = 438
+        self.clyde_direction = 2
+        self.eaten_ghost = [False, False, False, False]
+        self.blinky_dead = False
+        self.inky_dead = False
+        self.clyde_dead = False
+        self.pinky_dead = False
+        self.time=7200
+        self.startup_counter = 0
+        
+                
        
        
     def check_collisions(self, scor, power, power_count, eaten_ghosts, center_x, center_y, player_x, level):
@@ -416,11 +453,14 @@ class Level(object):
             self.score = 0
             self.lives = 3
             self.time=3600
-            self.level = copy.deepcopy(boards)
+            self.level=copy.deepcopy(overboard[self.level_num-1])
             self.game_over = False
             self.game_won = False
             self.startup_counter = 0
         if self.quitter:
+              self.load.setScore(0)
+              self.load.setLives(0)
+              self.load.setLevel(0)
               self.powerup = False
               self.power_counter = 0
               self.lives -= 1
@@ -447,9 +487,10 @@ class Level(object):
               self.clyde_dead = False
               self.pinky_dead = False
               self.score = 0
+              self.load.setScore(0)
               self.lives = 3
               self.time=7200
-              self.level = copy.deepcopy(boards)
+              self.level=copy.deepcopy(overboard[self.level_num-1])
               self.game_over = False
               self.game_won = False
               self.check=False
@@ -550,6 +591,9 @@ class Level(object):
             self.targets = self.get_targets(self.blinky_x, self.blinky_y, self.inky_x, self.inky_y, self.pinky_x, self.pinky_y, self.clyde_x,
                                         self.clyde_y, blinky, pinky, inky, clyde, self.player_x, self.player_y, self.powerup)
             self.moving=True
+            
+            if self.game_won:
+                self.moving=False                
             if not self.check:
                 if not self.happy.start():
                     self.happy.start()
@@ -557,8 +601,18 @@ class Level(object):
                 else:
                     self.check=True
                     self.quitter=False
-            if self.game_won:
-                self.moving=False
+                    
+            if self.happy.getScore() != 0 and self.check == False:
+                print(self.score)
+                print(self.level_num)
+                print(self.lives)
+                self.score = self.happy.getScore()
+                self.lives = self.happy.getLives()
+                self.level_num = self.happy.getLevel()
+                self.level=copy.deepcopy(overboard[self.level_num-1])
+                self.check = True
+                self.quitter = False
+                        
            
                
 

@@ -3,7 +3,6 @@ import startGUI
 import sqlite3
 
 
-
 class loadGUI(object):
     def __init__(self, screen,font):
         self.screen=screen
@@ -15,6 +14,9 @@ class loadGUI(object):
         self.clicked_load=False
         self.Mainfont=pygame.font.Font('freesansbold.ttf', 40)
         self.clicked = False
+        self.score = 0
+        self.lives = 0
+        self.level = 0
         
         
         
@@ -59,6 +61,7 @@ class loadGUI(object):
         LoadMenu_text = self.Mainfont.render(f'Load Menu', True, 'white')
         self.screen.blit(LoadMenu_text, (350, 250))
         self.check=False
+        delete_text = self.font.render("Delete",True,'white')
         firstsave_text = font.render(f'{s}', True, 'white')
         self.screen.blit(firstsave_text, (180, 310))
         secondsave_text = font.render(f'{s1}', True, 'white')
@@ -68,6 +71,9 @@ class loadGUI(object):
         delete1=pygame.draw.rect(self.screen, 'red', [650, 300, 100, 35], 0, 10)
         delete2=pygame.draw.rect(self.screen, 'red', [650, 350, 100, 35], 0, 10)
         delete3=pygame.draw.rect(self.screen, 'red', [650, 400, 100, 35], 0, 10)
+        self.screen.blit(delete_text, (665, 308))
+        self.screen.blit(delete_text, (665, 358))
+        self.screen.blit(delete_text, (665, 408))
 
         
         
@@ -106,10 +112,30 @@ class loadGUI(object):
                 self.connection.execute(sql, (self.new3[0],))
                 self.connection.commit()
                 self.clicked = True
+        if load1.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and len(lyst) >= 1 and self.clicked == False:
+                self.score = self.new1[4]
+                self.lives = self.new1[2]
+                self.level = self.new1[1]
+                self.clicked = True
+        if load2.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and len(lyst) >= 2 and self.clicked == False:
+                self.score = self.new2[4]
+                self.lives = self.new2[2]
+                self.level = self.new2[1]
+                self.clicked = True
+        if load3.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and len(lyst) >= 3 and self.clicked == False:
+                self.score = self.new3[4]
+                self.lives = self.new3[2]
+                self.level = self.new3[1]
+                self.clicked = True
         if self.clicked == True and not pygame.mouse.get_pressed()[0] == 1:
             self.clicked = False
+        
+        
 
-         
+        
        
         
         
@@ -118,10 +144,22 @@ class loadGUI(object):
             pass
         
         
-        return self.clicked_back,self.new1[1]
+        return self.clicked_back
     def setStatus(self, status):
         self.status = status
         
         return self.clicked_back
     def setStatus(self, status):
         self.status = status
+    def setScore(self,score):
+        self.score = score
+    def setLives(self,lives):
+        self.lives = lives
+    def setLevel(self,level):
+        self.level = level
+    def getScore(self):
+        return self.score
+    def getLives(self):
+        return self.lives
+    def getLevel(self):
+        return self.level

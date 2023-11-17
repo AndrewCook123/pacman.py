@@ -2,6 +2,7 @@ import pygame
 import LoadGUI
 
 
+
 class StartGUI(object):
     def __init__(self, screen,font,status):
         self.clicked_start=False
@@ -12,10 +13,17 @@ class StartGUI(object):
         self.status=False
         self.new=LoadGUI.loadGUI(self.screen,self.font)
         self.Mainfont=pygame.font.Font('freesansbold.ttf', 40)
+        self.score = 0
+        self.lives = 0
+        self.level = 0
+        
         
         
         
     def start(self):
+        self.score = self.new.getScore()
+        self.lives = self.new.getLives()
+        self.level = self.new.getLevel()
         pos = pygame.mouse.get_pos()
         pygame.draw.rect(self.screen, 'white', [50, 200, 800, 300],0, 10)
         pygame.draw.rect(self.screen, 'dark gray', [70, 220, 760, 260], 0, 10)
@@ -44,7 +52,7 @@ class StartGUI(object):
             if self.timer<180:
                 self.timer+=1
             else:
-                clicked,level=self.new.load()
+                clicked = self.new.load()
                 if not self.check:
                     if not clicked:
                         self.clicked_start=False
@@ -65,11 +73,20 @@ class StartGUI(object):
         if pygame.mouse.get_pressed()[0] == 0:
             pass
         
-        return self.clicked_start,level
+        return self.clicked_start
     def setStatus(self, status):
         self.status = status
     def setLoad(self, clickedLoad):
         self.clicked_load = clickedLoad
+    def getScore(self):
+        self.score = self.new.getScore()
+        return self.score
+    def getLives(self):
+        self.lives = self.new.getLives()
+        return self.lives
+    def getLevel(self):
+        self.level = self.new.getLevel()
+        return self.level
     
                 
         
