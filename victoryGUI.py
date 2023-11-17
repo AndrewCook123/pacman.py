@@ -15,6 +15,7 @@ class VictoryGUI(object):
         self.check=False
         self.clicked=False
         self.new=saveGUI.saveGUI(self.screen, self.font,self.level,self.lives,self.date,self.score)
+        
     def victory(self):
         self.new.setlevel(self.level)
         self.new.setlives(self.lives)
@@ -28,17 +29,19 @@ class VictoryGUI(object):
         if top.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
                 self.clicked_next = True
+                #self.clicked=True
         if self.clicked_next:
                 if self.timer<180:
                     self.timer+=1
                 else:
-                    if not self.check:
-                        if not self.new.displaySave():
-                            self.new.displaySave()
+                    if not self.new.displaySave():
+                        self.new.displaySave()
                     else:
-                        self.check=True
+                        self.clicked=True
+                        
+        
                 
-    
+        
         if pygame.mouse.get_pressed()[0] == 0:
             pass
         return self.clicked
@@ -48,3 +51,7 @@ class VictoryGUI(object):
         self.lives = lives
     def setscore(self,score):
         self.score = score
+    
+    
+
+        
