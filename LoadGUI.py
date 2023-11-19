@@ -133,7 +133,6 @@ class loadGUI(object):
         if self.clicked == True and not pygame.mouse.get_pressed()[0] == 1:
             self.clicked = False
         
-        
 
         
        
