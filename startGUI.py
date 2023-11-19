@@ -24,6 +24,7 @@ class StartGUI(object):
         self.score = self.new.getScore()
         self.lives = self.new.getLives()
         self.level = self.new.getLevel()
+        print(self.score)
         pos = pygame.mouse.get_pos()
         pygame.draw.rect(self.screen, 'white', [50, 200, 800, 300],0, 10)
         pygame.draw.rect(self.screen, 'dark gray', [70, 220, 760, 260], 0, 10)
@@ -74,8 +75,6 @@ class StartGUI(object):
             pass
         
         return self.clicked_start
-    def setStatus(self, status):
-        self.status = status
     def setLoad(self, clickedLoad):
         self.clicked_load = clickedLoad
     def getScore(self):
@@ -86,6 +85,11 @@ class StartGUI(object):
         return self.lives
     def getLevel(self):
         self.level = self.new.getLevel()
+        return self.level
+    
+                
+        
+        
         return self.level
     
                 
