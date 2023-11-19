@@ -458,6 +458,9 @@ class Level(object):
             self.game_won = False
             self.startup_counter = 0
         if self.quitter:
+              self.quitter = False
+              self.starter = StartGUI(self.screen, self.font,False)
+              self.happy = self.starter
               self.load.setScore(0)
               self.load.setLives(0)
               self.load.setLevel(0)
@@ -603,15 +606,12 @@ class Level(object):
                     self.quitter=False
                     
             if self.happy.getScore() != 0 and self.check == False:
-                print(self.score)
-                print(self.level_num)
-                print(self.lives)
                 self.score = self.happy.getScore()
                 self.lives = self.happy.getLives()
                 self.level_num = self.happy.getLevel()
                 self.level=copy.deepcopy(overboard[self.level_num-1])
                 self.check = True
-                self.quitter = False
+
                         
            
                
@@ -703,4 +703,5 @@ class Level(object):
            
 
             pygame.display.flip()
+        pygame.quit()
         pygame.quit()
