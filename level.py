@@ -426,6 +426,7 @@ class Level(object):
                 self.moving = False
         if self.game_over and self.over.Gover():
             self.powerup = False
+            self.over.setStatus(False)
             self.power_counter = 0
             self.lives -= 1
             self.startup_counter = 0
@@ -452,7 +453,7 @@ class Level(object):
             self.pinky_dead = False
             self.score = 0
             self.lives = 3
-            self.time=3600
+            self.time=7200
             self.level=copy.deepcopy(overboard[self.level_num-1])
             self.game_over = False
             self.game_won = False
@@ -570,7 +571,6 @@ class Level(object):
             if self.clyde_dead:
                 self.ghost_speeds[3] = 4
             
-
             self.game_won = True
             for i in range(len(self.level)):
                 if 1 in self.level[i] or 2 in self.level[i]:
@@ -703,5 +703,4 @@ class Level(object):
            
 
             pygame.display.flip()
-        pygame.quit()
         pygame.quit()
