@@ -1,6 +1,6 @@
 import pygame
 
-class pause(object):
+class Pause(object):
     def __init__(self,screen,font,status):
         self.status=False
         self.font=font
@@ -8,6 +8,7 @@ class pause(object):
         self.clicked_pause=False
         self.clicked_resume=False
         self.clicked_quit=False
+        self.clicked = False
         self.Mainfont=pygame.font.Font('freesansbold.ttf', 40)
     def show(self):
         self.clicked_resume=False
@@ -23,12 +24,12 @@ class pause(object):
         pos = pygame.mouse.get_pos()
         pygame.draw.rect(self.screen, 'white', [50, 200, 800, 300],0, 10)
         pygame.draw.rect(self.screen, 'dark grey', [70, 220, 760, 260], 0, 10)
-        resume=pygame.draw.rect(self.screen, 'Blue', [365, 300, 150, 50], 0, 10)
+        resume = pygame.draw.rect(self.screen, 'Blue', [270, 335, 150, 50], 0, 10)
         resume_text = self.font.render(f'Resume', True, 'white')
-        self.screen.blit(resume_text, (380, 320))
-        quits=pygame.draw.rect(self.screen, 'Blue', [365, 375, 150, 50], 0, 10)
+        self.screen.blit(resume_text, (320, 355))
+        quits = pygame.draw.rect(self.screen, 'Blue', [470, 335, 150, 50], 0, 10)
         quit_text = self.font.render(f'Quit', True, 'white')
-        self.screen.blit(quit_text, (380, 395))
+        self.screen.blit(quit_text, (490, 355))
         pauseMenu_text = self.Mainfont.render(f'Pause Menu', True, 'white')
         if resume.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
@@ -37,7 +38,7 @@ class pause(object):
         return self.clicked_resume
     def quit_button(self):
         pos = pygame.mouse.get_pos()
-        quits=pygame.draw.rect(self.screen, 'Blue', [365, 375, 150, 50], 0, 10)
+        quits = pygame.draw.rect(self.screen, 'Blue', [470, 335, 150, 50], 0, 10)
         quit_text = self.font.render(f'Quit', True, 'white')
         self.screen.blit(quit_text, (380, 395))
         pauseMenu_text = self.Mainfont.render(f'Pause Menu', True, 'white')
