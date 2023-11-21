@@ -19,7 +19,7 @@ class Level(object):
         self.timer = pygame.time.Clock()
         self.fps = 60
         self.font = pygame.font.Font('freesansbold.ttf', 20)
-        self.level_num=0
+        self.level_num = 1
         self.level = copy.deepcopy(overboard[self.level_num-1])
         self.color = 'blue'
         self.PI = math.pi
@@ -97,15 +97,20 @@ class Level(object):
         if game_over:
             self.over.Gover()
         if game_won:
-            self.won.setlevel(self.level_num)
+            self.won.setlevel(self.level_num+1)
             self.won.setlives(self.lives)
             self.won.setscore(self.score)
 
             if self.won.victory():
                 self.level_num+=1
                 self.transLevel()
+                if self.level_num > len(overboard)+1:
+                    self.level_num = 0
                 self.level=copy.deepcopy(overboard[self.level_num-1])
+                
     def transLevel(self):
+        self.won1 = VictoryGUI(self.screen, self.font,self.level_num,self.lives,self.date,self.score)
+        self.won = self.won1
         self.powerup = False
         self.power_counter = 0
         self.startup_counter = 0
@@ -494,7 +499,7 @@ class Level(object):
               self.load.setScore(0)
               self.lives = 3
               self.time=7200
-              self.level=copy.deepcopy(overboard[self.level_num-1])
+              self.level=copy.deepcopy(overboard[0])
               self.game_over = False
               self.game_won = False
               self.check=False
@@ -583,13 +588,13 @@ class Level(object):
             player_circle = pygame.draw.circle(self.screen, 'black', (self.center_x, self.center_y), 20, 2)
             player.draw_player(self.direction, self.player_x, self.player_y, self.counter, self.screen, self.player_images)
             blinky = Ghost(self.blinky_x, self.blinky_y, self.targets[0], self.ghost_speeds[0], self.blinky_img, self.blinky_direction, self.blinky_dead,
-                           self.blinky_box, self.powerup, 0)
+                           self.blinky_box, self.powerup, 0, self.screen, self.eaten_ghost, self.level)
             inky = Ghost(self.inky_x, self.inky_y, self.targets[1], self.ghost_speeds[1], self.inky_img, self.inky_direction, self.inky_dead,
-                         self.inky_box, self.powerup, 1)
+                         self.inky_box, self.powerup, 1, self.screen, self.eaten_ghost, self.level)
             pinky = Ghost(self.pinky_x, self.pinky_y, self.targets[2], self.ghost_speeds[2], self.pinky_img, self.pinky_direction, self.pinky_dead,
-                          self.pinky_box, self.powerup, 2)
+                          self.pinky_box, self.powerup, 2, self.screen, self.eaten_ghost, self.level)
             clyde = Ghost(self.clyde_x, self.clyde_y, self.targets[3], self.ghost_speeds[3], self.clyde_img, self.clyde_direction, self.clyde_dead,
-                          self.clyde_box, self.powerup, 3)
+                          self.clyde_box, self.powerup, 3, self.screen, self.eaten_ghost, self.level)
             self.draw_misc(self.game_won, self.game_over, self.lives)
             self.targets = self.get_targets(self.blinky_x, self.blinky_y, self.inky_x, self.inky_y, self.pinky_x, self.pinky_y, self.clyde_x,
                                         self.clyde_y, blinky, pinky, inky, clyde, self.player_x, self.player_y, self.powerup)
