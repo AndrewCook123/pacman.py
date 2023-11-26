@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Oct 19 08:29:20 2023
-
-@author: Aceco
-"""
-
 import pygame
 
 class Player(object):
@@ -12,8 +6,9 @@ class Player(object):
         self.WIDTH = 900
         self.HEIGHT = 950
     
-    def move_player(self, play_x, play_y, turns_allowed, direction, player_speed):
-        # r, l, u, d
+    def move_player(self, play_x:str, play_y:str, turns_allowed:list, direction:int, player_speed:int) -> int | int:
+        ''' This function is responsible for moving the player. '''
+        # right = 0, left = 1, up = 2, down = 3
         if direction == 0 and turns_allowed[0]:
             play_x += player_speed
         elif direction == 1 and turns_allowed[1]:
@@ -24,7 +19,8 @@ class Player(object):
             play_y += player_speed
         return play_x, play_y
     
-    def draw_player(self, direction, player_x, player_y, counter, screen, player_images):
+    def draw_player(self, direction:int, player_x:int, player_y:int, counter:int, screen:list, player_images:str) -> None:
+        ''' This function draw the player on screen. '''
         # 0-RIGHT, 1-LEFT, 2-UP, 3-DOWN
         if direction == 0:
             screen.blit(player_images[counter // 5], (player_x, player_y))
@@ -35,7 +31,8 @@ class Player(object):
         elif direction == 3:
             screen.blit(pygame.transform.rotate(player_images[counter // 5], 270), (player_x, player_y))
                 
-    def check_position(self, centerx, centery, direction, level):
+    def check_position(self, centerx:int, centery:int, direction:int, level:list) -> list:
+        ''' This function checks the players location on the board. '''
         turns = [False, False, False, False]
         num1 = (self.HEIGHT - 50) // 32
         num2 = (self.WIDTH // 30)
@@ -76,6 +73,17 @@ class Player(object):
                     if level[centery // num1][(centerx - num3) // num2] < 3:
                         turns[1] = True
                     if level[centery // num1][(centerx + num3) // num2] < 3:
+                        turns[0] = True
+            if direction == 0 or direction == 1:
+                if 12 <= centerx % num2 <= 18:
+                    if level[(centery + num1) // num1][centerx // num2] == 10:
+                            turns[3] = True
+                    if level[(centery - num1) // num1][centerx // num2] == 10:
+                        turns[2] = True
+                if 12 <= centery % num1 <= 18:
+                    if level[centery // num1][(centerx - num3) // num2] == 10:
+                        turns[1] = True
+                    if level[centery // num1][(centerx + num3) // num2] == 10:
                         turns[0] = True
         else:
             turns[0] = True
