@@ -3,8 +3,9 @@ import startGUI
 import sqlite3
 
 
+
 class loadGUI(object):
-    def __init__(self, screen,font):
+    def __init__(self, screen:list,font:str)->None:
         self.screen=screen
         self.font=font
         self.check=False
@@ -22,7 +23,9 @@ class loadGUI(object):
         
         
         
-    def load(self):
+    def load(self)-> bool:
+        ''' This function will display the saved games and when a player has 
+        selected a saved game then that saved game will begin'''
         index=0
         lyst = []
         self.connection.execute(''' CREATE TABLE IF NOT EXISTS PACMANGAMES
@@ -82,7 +85,7 @@ class loadGUI(object):
         if back.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
                 self.clicked_back = True
-                self.new=startGUI.StartGUI(self.screen, self.font,False)
+                self.new=startGUI.StartGUI(self.screen, self.font)
         
         if self.clicked_back:
             if self.timer<180:
@@ -94,6 +97,7 @@ class loadGUI(object):
                         
                 else:
                     self.check=True
+        
         if delete1.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and len(lyst) >= 1 and self.clicked == False:
                 sql = 'DELETE FROM PACMANGAMES WHERE SAVENAME=?'
@@ -133,6 +137,8 @@ class loadGUI(object):
         if self.clicked == True and not pygame.mouse.get_pressed()[0] == 1:
             self.clicked = False
         
+        
+        
 
         
        
@@ -144,21 +150,28 @@ class loadGUI(object):
         
         
         return self.clicked_back
-    def setStatus(self, status):
+    def setStatus(self, status:bool)->None:
+        ''' This function will set the status variable to the value that is passed by the status perameter'''
         self.status = status
-        
-        return self.clicked_back
-    def setStatus(self, status):
-        self.status = status
-    def setScore(self,score):
+    def setScore(self,score:int)->None:
+        ''' This function will set the score variable to the value that is passed by the score perameter'''
         self.score = score
-    def setLives(self,lives):
+    def setLives(self,lives:int)->None:
+        ''' This function will set the lives variable to the value that is passed by the lives perameter'''
         self.lives = lives
-    def setLevel(self,level):
+    def setLevel(self,level:int)->None:
+        ''' This function will set the level variable to the value that is passed by the level perameter'''
         self.level = level
-    def getScore(self):
+    def getScore(self)->int:
+        '''Thsi function will return the value of score'''
         return self.score
-    def getLives(self):
+    def getLives(self)->int:
+        '''Thsi function will return the value of lives'''
         return self.lives
-    def getLevel(self):
+    def getLevel(self)->int:
+        '''Thsi function will return the value of level'''
         return self.level
+    
+    
+    
+    
