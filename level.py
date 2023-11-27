@@ -107,7 +107,7 @@ class Level(object):
             if self.won.victory():
                 self.level_num += 1
                 self.transLevel()
-                if self.level_num > len(overboard)+1:
+                if self.level_num > len(overboard):
                     self.level_num = 0
                 self.level = copy.deepcopy(overboard[self.level_num-1])
                 
@@ -475,6 +475,7 @@ class Level(object):
             self.game_won = False
             self.startup_counter = 0
         if self.quitter:
+              self.level_num = 0
               self.quitter = False
               self.starter = StartGUI(self.screen, self.font,False)
               self.happy = self.starter
