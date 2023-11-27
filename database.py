@@ -1,7 +1,7 @@
 import sqlite3
 import LoadGUI
 class Database(object):
-    def __init__(self,savename,level,lives,date,score):
+    def __init__(self,savename:str,level:int,lives:int,date:str,score:int)->None:
         self.name=savename
         self.lives=lives
         self.level=level
@@ -9,7 +9,8 @@ class Database(object):
         self.score=score
         self.connection=sqlite3.connect("pacman.db")
         self.new1=[()]
-    def databasesetter(self):
+    def databasesetter(self)->None:
+        '''This function will create the save database and save the records of the saved games'''
         count =0
 
         
@@ -25,14 +26,6 @@ class Database(object):
             print("no no")
         
         
-        selector2=self.connection.execute("SELECT SAVENAME,LEVEL, LIVES, DATESAVE, SCORE from PACMANGAMES")
-        new=selector2.fetchall()
-        # for row in selector2:
-        #     print("Save name=",row[1])
-            # print("Level=",row[1])
-            # print("Lives=",row[2])
-            # print("Date of save=",row[3])
-            # print("Score=",row[4])
-            # print(Database.limit)
-        print("\n")
+      
         self.connection.close()
+        
