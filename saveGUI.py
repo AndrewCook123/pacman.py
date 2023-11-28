@@ -1,7 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov 13 19:19:59 2023
+
+@author: corydragun
+"""
 import database
 import pygame
 import sqlite3
-class saveGUI(object):
+class SaveGui(object):
     def __init__(self,screen:list,font:str,level:int,lives:int,date:str,score:int)->None:
         self.lives=lives
         self.level=level
@@ -13,7 +20,7 @@ class saveGUI(object):
         self.connection=sqlite3.connect("pacman.db")
         self.screen=screen
         self.font=font
-    def displaySave(self)->None:
+    def display_save(self)->None:
         ''' This function will display the users save name on screen and when 
         the save button is pressed it will send the save name along with level, lives, date, and score'''
         self.data=database.Database(self.usertext,self.level,self.lives,self.date,self.score)
@@ -45,15 +52,15 @@ class saveGUI(object):
                     pass
                 elif pygame.mouse.get_pressed()[0] == 1 and self.usertext != "":
                     self.clicked = True
-                    self.data.databasesetter()
+                    self.data.database_setter()
         return self.clicked
                 
-    def setlevel(self,level:int)->None:
+    def set_level(self,level:int)->None:
         ''' This function will set the level variable to the value that is passed by the level perameter'''
         self.level = level
-    def setlives(self,lives:int)->None:
+    def set_lives(self,lives:int)->None:
         ''' This function will set the lives variable to the value that is passed by the lives perameter'''
         self.lives = lives
-    def setscore(self,score:int)->None:
+    def set_score(self,score:int)->None:
         ''' This function will set the score variable to the value that is passed by the score perameter'''
         self.score = score
