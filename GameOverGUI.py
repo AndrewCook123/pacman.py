@@ -1,20 +1,23 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 31 09:12:20 2023
 
+@author: corydragun
+"""
 import pygame
-class gameOver(object):
-    def __init__(self, screen:list, font:str, status:bool):
-        self.screen = screen
-        self.font = font
-        self.clicked_over = False
-        self.status = status
-        self.Mainfont = pygame.font.Font('freesansbold.ttf', 40)
-        
-    def Gover(self) -> bool:
-        ''' This function draws the gameover menu on screen with a restart button. '''
+class GameOver(object):
+    def __init__(self,screen,font,status):
+        self.screen=screen
+        self.font=font
+        self.clicked_over=False
+        self.status=status
+        self.Mainfont=pygame.font.Font('freesansbold.ttf', 40)
+    def gover(self):
         pos = pygame.mouse.get_pos()
         pygame.draw.rect(self.screen, 'white', [50, 200, 800, 300],0, 10)
         pygame.draw.rect(self.screen, 'dark gray', [70, 220, 760, 260], 0, 10)
-        gameoverbox = pygame.draw.rect(self.screen, 'Blue', [350, 400, 350, 50], 0, 10)
+        gameoverbox=pygame.draw.rect(self.screen, 'Blue', [350, 400, 350, 50], 0, 10)
         gameover_text = self.font.render('Game over! Push to restart', True, 'red')
         self.screen.blit(gameover_text, (380, 420))
         gameoverMenu_text = self.Mainfont.render('Game over Menu', True, 'red')
@@ -23,6 +26,5 @@ class gameOver(object):
             if pygame.mouse.get_pressed()[0] == 1:
                 self.status = True
         return self.status
-    def setStatus(self, status) -> None:
-        ''' This function sets the value of the status variable. '''
+    def set_status(self, status):
         self.status = status
