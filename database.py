@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov 13 17:55:05 2023
+
+@author: corydragun
+"""
+
 import sqlite3
 import LoadGUI
 class Database(object):
@@ -9,7 +17,7 @@ class Database(object):
         self.score=score
         self.connection=sqlite3.connect("pacman.db")
         self.new1=[()]
-    def databasesetter(self)->None:
+    def database_setter(self)->None:
         '''This function will create the save database and save the records of the saved games'''
         count =0
 
