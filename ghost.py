@@ -1,10 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Oct 19 18:14:15 2023
+
+@author: corydragun
+"""
 import pygame
 
 
 
 
 class Ghost(object):
-    def __init__(self, x_coord:int, y_coord:int, target:list, speed:int, img:str, direct:int, dead:bool, box:bool, powerup:bool, id:int, screen:list, eaten_ghost:list, level:list):
+    def __init__(self, x_coord, y_coord, target, speed, img, direct, dead, box, powerup, id, screen, eaten_ghost, level):
         self.WIDTH = 900
         self.HEIGHT = 950
         self.x_pos = x_coord
@@ -31,8 +38,7 @@ class Ghost(object):
         
         
 
-    def draw(self, screen:list, eaten_ghost:bool, spooked_img:str, dead_img:str) -> pygame.rect:
-        ''' This function draws the ghosts and there dead and eaten forms. '''
+    def draw(self,screen, eaten_ghost, spooked_img, dead_img):
         if (not self.powerup and not self.dead) or (eaten_ghost[self.id] and self.powerup and not self.dead):
             screen.blit(self.img, (self.x_pos, self.y_pos))
         elif self.powerup and not self.dead and not eaten_ghost[self.id]:
@@ -42,9 +48,8 @@ class Ghost(object):
         ghost_rect = pygame.rect.Rect((self.center_x - 18, self.center_y - 18), (36, 36))
         return ghost_rect
 
-    def check_collisions(self, level:list) -> list | bool:
-        ''' This function checks the ghosts collisions with the player and walls. '''
-        # Right, Left, Up, Down
+    def check_collisions(self, level):
+        # R, L, U, D
         num1 = ((self.HEIGHT - 50) // 32)
         num2 = (self.WIDTH // 30)
         num3 = 15
@@ -117,8 +122,8 @@ class Ghost(object):
             self.in_box = False
         return self.turns, self.in_box
 
-    def move_clyde(self) -> int | int | int:
-        # right, left, up, down
+    def move_clyde(self):
+        # r, l, u, d
         # clyde is going to turn whenever advantageous for pursuit
         if self.direction == 0:
             if self.target[0] > self.x_pos and self.turns[0]:
@@ -256,8 +261,8 @@ class Ghost(object):
             self.x_pos - 30
         return self.x_pos, self.y_pos, self.direction
 
-    def move_blinky(self) -> int | int | int:
-        # right, left, up, down
+    def move_blinky(self):
+        # r, l, u, d
         # blinky is going to turn whenever colliding with walls, otherwise continue straight
         if self.direction == 0:
             if self.target[0] > self.x_pos and self.turns[0]:
@@ -362,8 +367,8 @@ class Ghost(object):
             self.x_pos - 30
         return self.x_pos, self.y_pos, self.direction
 
-    def move_inky(self) -> int | int | int:
-        # right, left, up, down
+    def move_inky(self):
+        # r, l, u, d
         # inky turns up or down at any point to pursue, but left and right only on collision
         if self.direction == 0:
             if self.target[0] > self.x_pos and self.turns[0]:
@@ -484,8 +489,8 @@ class Ghost(object):
             self.x_pos - 30
         return self.x_pos, self.y_pos, self.direction
 
-    def move_pinky(self) -> int | int | int:
-        # right, left, up, down
+    def move_pinky(self):
+        # r, l, u, d
         # inky is going to turn left or right whenever advantageous, but only up or down on collision
         if self.direction == 0:
             if self.target[0] > self.x_pos and self.turns[0]:
