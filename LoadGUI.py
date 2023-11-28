@@ -1,10 +1,18 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Nov  2 01:06:22 2023
+
+@author: corydragun
+"""
+
 import pygame
 import startGUI
 import sqlite3
 
 
 
-class loadGUI(object):
+class LoadGui(object):
     def __init__(self, screen:list,font:str)->None:
         self.screen=screen
         self.font=font
@@ -150,25 +158,25 @@ class loadGUI(object):
         
         
         return self.clicked_back
-    def setStatus(self, status:bool)->None:
+    def set_status(self, status:bool)->None:
         ''' This function will set the status variable to the value that is passed by the status perameter'''
         self.status = status
-    def setScore(self,score:int)->None:
+    def set_score(self,score:int)->None:
         ''' This function will set the score variable to the value that is passed by the score perameter'''
         self.score = score
-    def setLives(self,lives:int)->None:
+    def set_lives(self,lives:int)->None:
         ''' This function will set the lives variable to the value that is passed by the lives perameter'''
         self.lives = lives
-    def setLevel(self,level:int)->None:
+    def set_level(self,level:int)->None:
         ''' This function will set the level variable to the value that is passed by the level perameter'''
         self.level = level
-    def getScore(self)->int:
+    def get_score(self)->int:
         '''Thsi function will return the value of score'''
         return self.score
-    def getLives(self)->int:
+    def get_lives(self)->int:
         '''Thsi function will return the value of lives'''
         return self.lives
-    def getLevel(self)->int:
+    def get_level(self)->int:
         '''Thsi function will return the value of level'''
         return self.level
     
