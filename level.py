@@ -1,17 +1,17 @@
+from board import overboard
+from Ghost import Ghost
+from player import Player
+from victoryGUI import VictoryGui
+from GameOverGUI import GameOver
+from startGUI import StartGui
+import LoadGUI
+from pauseGUI import Pause
+import saveGUI
 import pygame
 import copy
 import math
 from datetime import date
-from board import overboard
-from ghost import Ghost
-from player import Player
-from victoryGUI import VictoryGUI
-from gameOverGUI import gameOver
-from startGUI import StartGUI
-from pauseGUI import Pause
-import LoadGUI
-
-
+import random
 
 class Level(object):
     def __init__(self):
@@ -21,7 +21,7 @@ class Level(object):
         self.timer = pygame.time.Clock()
         self.fps = 60
         self.font = pygame.font.Font('freesansbold.ttf', 20)
-        self.level_num = 1
+        self.level_num=0
         self.level = copy.deepcopy(overboard[self.level_num-1])
         self.color = 'blue'
         self.PI = math.pi
@@ -53,7 +53,7 @@ class Level(object):
         self.clyde_direction = 2
         self.counter = 0
         self.flicker = False
-        # Right, Left, Up, Down
+        # R, L, U, D
         self.turns_allowed = [False, False, False, False]
         self.direction_command = 0
         self.player_speed = 2
@@ -77,18 +77,17 @@ class Level(object):
         self.game_over = False
         self.game_won = False
         self.quitter=False
-        self.resetNewlevel = False
-        self.time = 7200
-        self.over = gameOver(self.screen, self.font,False)
-        self.won = VictoryGUI(self.screen, self.font,self.level_num,self.lives,self.date,self.score)
-        self.happy = StartGUI(self.screen, self.font,False)
-        self.pauseMenu = Pause(self.screen,self.font, False)
-        self.load = LoadGUI.loadGUI(self.screen, self.font)
-        self.check = False
+        self.resetNewlevel=False
+        self.time=7200
+        self.over=GameOver(self.screen, self.font,False)
+        self.won=VictoryGui(self.screen, self.font,self.level_num,self.lives,self.date,self.score)
+        self.happy=StartGui(self.screen, self.font)
+        self.pauseMenu=Pause(self.screen,self.font, False)
+        self.load = LoadGUI.LoadGui(self.screen, self.font)
+        self.check=False
         
        
-    def draw_misc(self, game_won:bool, game_over:bool, lives:int) -> None:
-        ''' This function draws the gameover menu, victory menu, and transitions levels. '''
+    def draw_misc(self, game_won, game_over, lives):
         score_text = self.font.render(f'Score: {self.score}', True, 'white')
         self.screen.blit(score_text, (700, 75))
         lives_text = self.font.render(f'Lives: {self.lives}', True, 'white')
@@ -100,20 +99,18 @@ class Level(object):
         if game_over:
             self.over.Gover()
         if game_won:
-            self.won.setlevel(self.level_num+1)
-            self.won.setlives(self.lives)
-            self.won.setscore(self.score)
+            self.won.set_level(self.level_num)
+            self.won.set_lives(self.lives)
+            self.won.set_score(self.score)
 
             if self.won.victory():
-                self.level_num += 1
-                self.transLevel()
-                if self.level_num > len(overboard):
+                self.level_num+=1
+                self.trans_level()
+                if self.level_num > len(overboard)+1:
                     self.level_num = 0
-                self.level = copy.deepcopy(overboard[self.level_num-1])
-                
-    def transLevel(self) -> None:
-        ''' This function resets ghost positions and player position to default. '''
-        self.won1 = VictoryGUI(self.screen, self.font,self.level_num,self.lives,self.date,self.score)
+                self.level=copy.deepcopy(overboard[self.level_num-1])
+    def trans_level(self):
+        self.won1 = VictoryGui(self.screen, self.font,self.level_num,self.lives,self.date,self.score)
         self.won = self.won1
         self.powerup = False
         self.power_counter = 0
@@ -139,23 +136,23 @@ class Level(object):
         self.inky_dead = False
         self.clyde_dead = False
         self.pinky_dead = False
-        self.time = 7200
+        self.time=7200
         self.startup_counter = 0
+        
         
                 
        
        
-    def check_collisions(self, scor:int, power:bool, power_count:int, eaten_ghosts:list, center_x:int, center_y:int, player_x:int, level:list) -> int | bool | int | list:
-        ''' This function checks the players collisions with points and powerups on the board. '''
+    def check_collisions(self, scor, power, power_count, eaten_ghosts, center_x, center_y, player_x, level):
         num1 = (self.HEIGHT - 50) // 32
         num2 = self.WIDTH // 30
         if 0 < player_x < 870:
-            if level[center_y // num1][center_x // num2] == 1:
-                level[center_y // num1][center_x // num2] = 0
-                scor += 10
             if level[center_y // num1][center_x // num2] == 10:
                 level[center_y // num1][center_x // num2] = 0
                 self.lives += 1
+            if level[center_y // num1][center_x // num2] == 1:
+                level[center_y // num1][center_x // num2] = 0
+                scor += 10
             if level[center_y // num1][center_x // num2] == 2:
                 level[center_y // num1][center_x // num2] = 0
                 scor += 50
@@ -164,8 +161,7 @@ class Level(object):
                 eaten_ghosts = [False, False, False, False]
         return scor, power, power_count, eaten_ghosts
        
-    def draw_board(self, level:list) -> None:
-        ''' This function draws the board. '''
+    def draw_board(self, level):
         num1 = ((self.HEIGHT - 50) // 32)
         num2 = (self.WIDTH // 30)
         for i in range(len(level)):
@@ -198,10 +194,12 @@ class Level(object):
                                          (j * num2 + num2, i * num1 + (0.5 * num1)), 3)
                 if level[i][j] == 10:
                     pygame.draw.circle(self.screen, 'red', (j * num2 + (0.5 * num2), i * num1 + (0.5 * num1)), 15)
-                
+                       
+   
        
-    def get_targets(self, blink_x:int, blink_y:int, ink_x:int, ink_y:int, pink_x:int, pink_y:int, clyd_x:int, clyd_y:int, blinky:Ghost, pinky:Ghost, inky:Ghost, clyde:Ghost, player_x:int, player_y:int, powerup:bool) -> list:
-        ''' This function sets the targets for each ghost. '''
+   
+       
+    def get_targets(self, blink_x, blink_y, ink_x, ink_y, pink_x, pink_y, clyd_x, clyd_y, blinky, pinky, inky, clyde, player_x, player_y, powerup):
         if player_x < 450:
             runaway_x = 900
         else:
@@ -211,7 +209,6 @@ class Level(object):
         else:
             runaway_y = 0
         return_target = (380, 400)
-        # if the powerup is active the ghosts will flee, otherwise they will chase the player
         if powerup:
             if not blinky.dead and not self.eaten_ghost[0]:
                 blink_target = (runaway_x, runaway_y)
@@ -280,8 +277,7 @@ class Level(object):
                 clyd_target = return_target
         return [blink_target, ink_target, pink_target, clyd_target]
    
-    def reset_positions(self, player_circle:pygame.draw.circle, blinky:Ghost, inky:Ghost, pinky:Ghost, clyde:Ghost) -> None:
-        ''' This function resets the player and ghosts their default positions if the game is over, won, or quit. '''
+    def reset_positions(self, player_circle, blinky, inky, pinky, clyde):
         if not self.powerup:
             if (player_circle.colliderect(blinky.rect) and not blinky.dead) or \
                     (player_circle.colliderect(inky.rect) and not inky.dead) or \
@@ -441,10 +437,9 @@ class Level(object):
                 self.game_over = True
                 self.moving = False
         if self.game_over and self.over.Gover():
-            self.powerup = False
             self.over.setStatus(False)
+            self.powerup = False
             self.power_counter = 0
-            self.lives -= 1
             self.startup_counter = 0
             self.player_x = 450
             self.player_y = 663
@@ -475,13 +470,14 @@ class Level(object):
             self.game_won = False
             self.startup_counter = 0
         if self.quitter:
-              self.level_num = 0
               self.quitter = False
-              self.starter = StartGUI(self.screen, self.font,False)
+              self.starter = StartGui(self.screen, self.font)
               self.happy = self.starter
-              self.load.setScore(0)
-              self.load.setLives(0)
-              self.load.setLevel(0)
+              self.new_won=VictoryGui(self.screen, self.font,self.level_num,self.lives,self.date,self.score)
+              self.won=self.new_won
+              self.load.set_score(0)
+              self.load.set_lives(0)
+              self.load.set_level(0)
               self.powerup = False
               self.power_counter = 0
               self.lives -= 1
@@ -508,15 +504,14 @@ class Level(object):
               self.clyde_dead = False
               self.pinky_dead = False
               self.score = 0
-              self.load.setScore(0)
               self.lives = 3
               self.time=7200
-              self.level=copy.deepcopy(overboard[0])
+              self.level=copy.deepcopy(overboard[self.level_num-1])
               self.game_over = False
               self.game_won = False
               self.check=False
               self.startup_counter = 0
-              self.over.setStatus(False)
+              self.over.set_status(False)
               self.pauseMenu.start_over()
         if self.powerup and player_circle.colliderect(blinky.rect) and not blinky.dead and not self.eaten_ghost[0]:
             self.blinky_dead = True
@@ -537,8 +532,8 @@ class Level(object):
        
        
    
-    def gameLoop(self) -> None:
-        ''' This function starts the game. '''   
+    def game_loop(self):
+       
         player = Player()
         run = True
         while run:
@@ -567,7 +562,7 @@ class Level(object):
             self.center_x = self.player_x + 23
             self.center_y = self.player_y + 24
             if self.powerup:
-                self.ghost_speeds = [1,1,1,1]
+                self.ghost_speeds = [1, 1, 1, 1]
             else:
                 self.ghost_speeds = [2,2,2,2]
                 self.player_speed=2
@@ -588,16 +583,16 @@ class Level(object):
             if self.clyde_dead:
                 self.ghost_speeds[3] = 4
             
+
             self.game_won = True
-            #check to see if there are still points on the board
             for i in range(len(self.level)):
-                if 1 in self.level[i] or 2 in self.level[i]:
+                if 1 in self.level[i] or 2 in self.level[i] or 10 in self.level[i]:
                     self.game_won = False
             if self.time<=0:
                 self.game_over=True
             
        
-            #create player and ghosts 
+
             player_circle = pygame.draw.circle(self.screen, 'black', (self.center_x, self.center_y), 20, 2)
             player.draw_player(self.direction, self.player_x, self.player_y, self.counter, self.screen, self.player_images)
             blinky = Ghost(self.blinky_x, self.blinky_y, self.targets[0], self.ghost_speeds[0], self.blinky_img, self.blinky_direction, self.blinky_dead,
@@ -613,7 +608,6 @@ class Level(object):
                                         self.clyde_y, blinky, pinky, inky, clyde, self.player_x, self.player_y, self.powerup)
             self.moving=True
             
-            #check to see if the game is won or quit
             if self.game_won:
                 self.moving=False                
             if not self.check:
@@ -624,12 +618,11 @@ class Level(object):
                     self.check=True
                     self.quitter=False
                     
-            #update the score, lives and level and update the board
-            if self.happy.getScore() != 0 and self.check == False:
-                self.score = self.happy.getScore()
-                self.lives = self.happy.getLives()
-                self.level_num = self.happy.getLevel()
-                self.level = copy.deepcopy(overboard[self.level_num-1])
+            if self.happy.get_score() != 0 and self.check == False:
+                self.score = self.happy.get_score()
+                self.lives = self.happy.get_lives()
+                self.level_num = self.happy.get_level()
+                self.level=copy.deepcopy(overboard[self.level_num-1])
                 self.check = True
 
                         
@@ -641,12 +634,12 @@ class Level(object):
             time_text = self.font.render(f'Time: {self.time//60}', True, 'white')
             self.screen.blit(time_text, (350, 45))
             if self.pauseMenu.show():
-                self.pauseMenu.PauseMenu()
+                self.pauseMenu.pause_menu()
                 if self.pauseMenu.quit_button():
                     self.quitter=True
                     self.happy.clicked_start=False
                 self.moving=False
-                if self.pauseMenu.PauseMenu():
+                if self.pauseMenu.pause_menu():
                     self.moving=True
                
             if self.moving:
@@ -723,4 +716,5 @@ class Level(object):
            
 
             pygame.display.flip()
+        pygame.quit()
         pygame.quit()
